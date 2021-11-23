@@ -49,8 +49,6 @@ import org.candle.decompiler.intermediate.expression.Throw;
 import org.candle.decompiler.intermediate.expression.TypedExpression;
 import org.candle.decompiler.intermediate.expression.Variable;
 
-import com.sun.org.apache.xerces.internal.xs.datatypes.ByteList;
-
 public class MethodIntermediateVisitor implements Visitor {
 	private static final Log LOG = LogFactory.getLog(MethodIntermediateVisitor.class);
 	

@@ -19,7 +19,7 @@ public class EnhancedForBlock extends SerializableBlock<EnhancedForIntermediate>
 	public void write(Writer builder) throws IOException {
 		final String indent = buildIndent();
 		builder.append(indent);
-		builder.append("for(");
+		builder.append("for (");
 		try {
 			String outputType = SignatureUtility.signatureToString(intermediate.getVariable().getType().getSignature());
 			

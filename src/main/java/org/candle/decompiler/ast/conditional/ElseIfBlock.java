@@ -16,7 +16,7 @@ public class ElseIfBlock extends SerializableBlock<ElseIfIntermediate> {
 	public void write(Writer builder) throws IOException {
 		final String indent = buildIndent();
 		builder.append(indent);
-		builder.append("else if(");
+		builder.append("else if (");
 		intermediate.getExpression().write(builder);
 		builder.append(") ");
 		super.write(builder);

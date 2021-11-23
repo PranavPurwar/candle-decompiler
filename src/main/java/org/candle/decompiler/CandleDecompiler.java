@@ -55,7 +55,7 @@ public class CandleDecompiler {
 			clz = Repository.lookupClass(clazzName);
 			decompile(clz, writer);
 		} catch (ClassNotFoundException e) {
-			throw new DecompilerException("Exception while decompiling.", e);
+			throw new DecompilerException("Exception while decompiling: " + e, e);
 		}
 		
 	}
@@ -64,7 +64,7 @@ public class CandleDecompiler {
 		Validate.notNull(clz, "Input file is required, but not provided.");
 		Validate.notNull(src, "Output file is required, but not provided.");
 		
-		LOG.info("Processing: "+clz.getAbsolutePath());
+		LOG.info("Processing: " + clz.getAbsolutePath());
 		
 		Writer writer = null;
 		try {
@@ -72,11 +72,11 @@ public class CandleDecompiler {
 			ClassParser cp = new ClassParser(clz.getAbsolutePath());
 			decompile(cp.parse(), writer);
 		}
-		catch(Exception e) {
-			throw new DecompilerException("Exception while decompiling.", e);
+		catch (Exception e) {
+			throw new DecompilerException("Exception while decompiling: " + e, e);
 		}
 		finally {
-			if(writer != null) {
+			if (writer != null) {
 				try {
 					writer.flush();
 					writer.close();
@@ -97,7 +97,7 @@ public class CandleDecompiler {
 		try {
 			classBlock.write(writer);
 		} catch (IOException e) {
-			throw new DecompilerException("Exception while decompiling.", e);
+			throw new DecompilerException("Exception while decompiling: " + e, e);
 		}
 		LOG.debug("Completed decompilation.");
 	}

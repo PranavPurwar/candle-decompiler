@@ -37,8 +37,6 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.swing.text.StyleContext.NamedStyle;
-
 import org.candle.decompiler.instruction.graph.vertex.NamedDirectedSubgraph;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;

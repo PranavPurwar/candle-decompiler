@@ -60,7 +60,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	
 	
 	public void process() {
-		if(igc.getOrderedIntermediate().size() < 1) {
+		if (igc.getOrderedIntermediate().size() < 1) {
 			return;
 		}
 		
@@ -73,7 +73,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	@Override
 	public void visitAbstractIntermediate(AbstractIntermediate line) {
 		while(!current.within(line.getInstruction())) {
-			if(LOG.isDebugEnabled()) {
+			if (LOG.isDebugEnabled()) {
 				LOG.debug("Line: "+ReflectionToStringBuilder.toString(line)+" not within: "+ReflectionToStringBuilder.toString(current));
 			}
 			moveUp();
@@ -83,7 +83,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	
 	@Override
 	public void visitEnhancedForLoopIntermediate(EnhancedForIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -100,7 +100,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	
 	@Override
 	public void visitForIntermediate(ForIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -117,7 +117,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	
 	@Override
 	public void visitWhileIntermediate(WhileIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -134,7 +134,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	
 	@Override
 	public void visitStatementIntermediate(StatementIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -149,7 +149,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		//now, visit the successor, if any.
 		List<AbstractIntermediate> candidates = getUnseenSuccessors(line);
 		
-		if(candidates.size() > 0) {
+		if (candidates.size() > 0) {
 			for(AbstractIntermediate candidate : candidates) {
 				//move to the next.
 				candidate.accept(this);
@@ -159,7 +159,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	
 	@Override
 	public void visitSwitchIntermediate(SwitchIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -191,7 +191,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		//now, visit the successor, if any.
 		List<AbstractIntermediate> candidates = getUnseenSuccessors(line);
 		
-		if(candidates.size() > 0) {
+		if (candidates.size() > 0) {
 			for(AbstractIntermediate candidate : candidates) {
 				//move to the next.
 				candidate.accept(this);
@@ -202,7 +202,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	
 	@Override
 	public void visitElseIntermediate(ElseIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -217,7 +217,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		//now, visit the successor, if any.
 		List<AbstractIntermediate> candidates = getUnseenSuccessors(line);
 		
-		if(candidates.size() > 0) {
+		if (candidates.size() > 0) {
 			for(AbstractIntermediate candidate : candidates) {
 				//move to the next.
 				candidate.accept(this);
@@ -234,8 +234,8 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		AbstractIntermediate trueOutcome = igc.getTrueTarget(bbi);
 		AbstractIntermediate falseOutcome = igc.getFalseTarget(bbi);
 		/*for(AbstractIntermediate successor : successors) {
-			if(successor instanceof BooleanBranchOutcome) {
-				if(((BooleanBranchOutcome) successor).getExpressionOutcome() == Boolean.TRUE) {
+			if (successor instanceof BooleanBranchOutcome) {
+				if (((BooleanBranchOutcome) successor).getExpressionOutcome() == Boolean.TRUE) {
 					trueOutcome = (BooleanBranchOutcome)successor;
 				}
 				else {
@@ -253,14 +253,14 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		this.current = block;
 		falseOutcome.accept(this);
 
-		if(this.current == block) {
+		if (this.current == block) {
 			moveUp();
 		}
 	}
 	
 	@Override
 	public void visitTryIntermediate(TryIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -286,14 +286,14 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		
 		//find the non-catch/finally...
 		for(AbstractIntermediate successor : successors) {
-			if(successor instanceof CatchIntermediate) {
+			if (successor instanceof CatchIntermediate) {
 				catchBlocks.add(successor);
 			}
-			else if(successor instanceof FinallyIntermediate) {
+			else if (successor instanceof FinallyIntermediate) {
 				finallyIntermediate = successor;
 			}
 			else {
-				if(inner != null) {
+				if (inner != null) {
 					throw new IllegalStateException("Inner direction already set.");
 				}
 				inner = successor;
@@ -301,7 +301,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		}
 		Collections.sort(catchBlocks, new IntermediateComparator());
 		
-		if(inner == null) {
+		if (inner == null) {
 			throw new IllegalStateException("Inner is not set.");
 		}
 		
@@ -314,7 +314,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 			catchBlock.accept(this);
 		}
 		
-		if(finallyIntermediate != null) {
+		if (finallyIntermediate != null) {
 			current = tryBlock;
 			finallyIntermediate.accept(this);
 		}
@@ -322,7 +322,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	
 	@Override
 	public void visitCatchIntermediate(CatchIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -342,14 +342,14 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 			successor.accept(this);
 		}
 		
-		if(this.current == catchBlock) {
+		if (this.current == catchBlock) {
 			moveUp();
 		}
 	}
 	
 	@Override
 	public void visitFinallyIntermediate(FinallyIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -368,14 +368,14 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 			successor.accept(this);
 		}
 
-		if(this.current == finallyBlock) {
+		if (this.current == finallyBlock) {
 			moveUp();
 		}
 	}
 	
 	@Override
 	public void visitElseIfIntermediate(ElseIfIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -395,8 +395,8 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		
 		/*
 		for(AbstractIntermediate successor : successors) {
-			if(successor instanceof BooleanBranchOutcome) {
-				if(((BooleanBranchOutcome) successor).getExpressionOutcome() == Boolean.TRUE) {
+			if (successor instanceof BooleanBranchOutcome) {
+				if (((BooleanBranchOutcome) successor).getExpressionOutcome() == Boolean.TRUE) {
 					trueOutcome = (BooleanBranchOutcome)successor;
 				}
 				else {
@@ -414,7 +414,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		this.current = elseIfBlock;
 		falseOutcome.accept(this);
 
-		if(this.current == elseIfBlock) {
+		if (this.current == elseIfBlock) {
 			moveUp();
 		}
 		
@@ -422,7 +422,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 	
 	@Override
 	public void visitIfIntermediate(IfIntermediate line) {
-		if(seen.contains(line)) {
+		if (seen.contains(line)) {
 			//do nothing.
 			return;
 		}
@@ -442,8 +442,8 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		AbstractIntermediate falseOutcome = igc.getFalseTarget(line);
 		/*
 		for(AbstractIntermediate successor : successors) {
-			if(successor instanceof BooleanBranchOutcome) {
-				if(((BooleanBranchOutcome) successor).getExpressionOutcome() == Boolean.TRUE) {
+			if (successor instanceof BooleanBranchOutcome) {
+				if (((BooleanBranchOutcome) successor).getExpressionOutcome() == Boolean.TRUE) {
 					trueOutcome = (BooleanBranchOutcome)successor;
 				}
 				else {
@@ -461,7 +461,7 @@ public class BlockVisitor extends GraphIntermediateVisitor {
 		this.current = ifBlock;
 		falseOutcome.accept(this);
 
-		if(this.current == ifBlock) {
+		if (this.current == ifBlock) {
 			moveUp();
 		}
 		

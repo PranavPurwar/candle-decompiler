@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Arrays;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.commons.lang.StringUtils;
 
-import com.sun.org.apache.bcel.internal.classfile.Utility;
+import org.apache.bcel.classfile.Utility;
 
 public class ClassBlock extends Block {
 
@@ -68,20 +69,23 @@ public class ClassBlock extends Block {
 	
 	@Override
 	public void write(Writer builder) throws IOException {
-		builder.append("package ").append(packageName).append(";");
-		builder.append(Block.NL);
-		builder.append(Block.NL);
+		if (StringUtils.isNotBlank(packageName)) {
+			builder.append("package ").append(packageName).append(";");
+			builder.append(Block.NL);
+			builder.append(Block.NL);
+		}
 		
-		for(String imp : imports) {
+		for (String imp : imports) {
 			if(StringUtils.startsWith(imp, "[")) {
 				continue;
 			}
 			
-			builder.append("import ").append(imp).append(";");
-			builder.append(Block.NL);
+			if (!StringUtils.startsWith(imp, "java.lang") && (!StringUtils.substringBeforeLast(imp, ".").equals(packageName))) {
+				builder.append("import ").append(imp).append(";");
+				builder.append(Block.NL);
+			}
 		}
 		
-		builder.append(Block.NL);
 		builder.append(Block.NL);
 		
 		builder.append(extractClassSignature());
@@ -91,9 +95,10 @@ public class ClassBlock extends Block {
 		for(String field : this.fields) {
 			builder.append(NL).append(TAB).append(field).append(";");
 		}
-		builder.append(Block.NL);
+		if (children.size() > 0)
+				builder.append(Block.NL);
 		
-		for(Block child : children) {
+		for (Block child : children) {
 			builder.append(NL);
 			child.write(builder);
 		}
@@ -109,18 +114,17 @@ public class ClassBlock extends Block {
 		StringBuilder builder = new StringBuilder(access);
 		
 		String className = StringUtils.substringAfterLast(javaClass.getClassName(), ".");
-		builder.append(Utility.classOrInterface(javaClass.getAccessFlags()) + " " + className);
-		
-		if(StringUtils.isNotBlank(this.getSuperClassName()))
-		{
-			builder.append(" extends ");
-			builder.append(Utility.compactClassName(javaClass.getSuperclassName(), false));
+		builder.append(Utility.classOrInterface(javaClass.getAccessFlags()) + " " + className + " ");
+		final String superClassNameAsString = Utility.compactClassName(javaClass.getSuperclassName(), false);
+		if (!superClassNameAsString.equals("java.lang.Object")) {
+			builder.append("extends ");
+			builder.append(StringUtils.substringAfterLast(superClassNameAsString, ".") + " ");
 		}
-		builder.append(Block.NL);
 		
 		int numInterfaces = javaClass.getInterfaceNames().length;
 
 		if (numInterfaces > 0) {
+			builder.append(Block.NL);
 			builder.append("implements ");
 
 			for (int i = 0; i < numInterfaces; i++) {

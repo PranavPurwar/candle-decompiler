@@ -76,7 +76,7 @@ import org.candle.decompiler.intermediate.graph.range.WhileRangeVisitor;
 import org.jgrapht.ext.DOTExporter;
 import org.jgrapht.ext.IntegerNameProvider;
 
-import com.sun.org.apache.bcel.internal.classfile.Utility;
+import org.apache.bcel.classfile.Utility;
 
 public class ClassIntermediateVisitor extends EmptyVisitor {
 
@@ -92,6 +92,9 @@ public class ClassIntermediateVisitor extends EmptyVisitor {
 	}
 	
 	public ClassBlock decompile() {
+		// save the classBlock, because this will be later used to import new packages, found by Utility class of org.apache.bcel.classfile
+		// while parsing method bodies
+	    org.candle.decompiler.util.Helper.setCurrentClass(classBlock);
 		this.javaClass.accept(this);
 		return classBlock;
 	}

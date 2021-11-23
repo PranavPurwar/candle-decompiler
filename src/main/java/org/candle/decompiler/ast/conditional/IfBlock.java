@@ -16,7 +16,7 @@ public class IfBlock extends SerializableBlock<IfIntermediate> {
 	public void write(Writer builder) throws IOException {
 		final String indent = buildIndent();
 		builder.append(indent);
-		builder.append("if(");
+		builder.append("if (");
 		intermediate.getExpression().write(builder);
 		builder.append(") ");
 		super.write(builder);
